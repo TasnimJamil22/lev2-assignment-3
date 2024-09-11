@@ -1,22 +1,22 @@
-import { RoomModel } from './room.model';
+import { Room } from './room.model';
 import { TRoom } from './room.interface';
 import { ObjectId } from 'mongodb';
 
 //create a room
 const createRoomIntoDB = async (payload: TRoom) => {
-  const result = await RoomModel.create(payload);
+  const result = await Room.create(payload);
   return result;
 };
 
 //get a single room by id
 const getASingleRoomFromDB = async (id: string) => {
-  const result = await RoomModel.findOne({ _id: id });
+  const result = await Room.findOne({ _id: id });
   return result;
 };
 
 //get all rooms
 const getAllRoomsFromDB = async () => {
-  const result = await RoomModel.find({ isDeleted: false });
+  const result = await Room.find({ isDeleted: false });
   return result;
 };
 
@@ -32,7 +32,7 @@ export type roomUpdate = {
 };
 //update a room by id
 const updateRoomIntoDB = async (id: string, updatedRoom: roomUpdate) => {
-  const result = await RoomModel.findByIdAndUpdate(
+  const result = await Room.findByIdAndUpdate(
     { _id: id },
     {
       $set: {
@@ -53,7 +53,7 @@ const updateRoomIntoDB = async (id: string, updatedRoom: roomUpdate) => {
 //soft delete
 //soft delete a room ( is not actually removed but isDelete: true , and then we use when app.get , we just search queries which are isDeleted:false, so it is remaining actually in the db, but shows deleted in the client side )
 const deleteRoomSoftly = async (id: string) => {
-  const result = await RoomModel.findByIdAndUpdate(id, { isDeleted: true });
+  const result = await Room.findByIdAndUpdate(id, { isDeleted: true });
   return result;
 };
 

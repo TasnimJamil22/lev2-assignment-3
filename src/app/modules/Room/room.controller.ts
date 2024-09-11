@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { RoomServices } from './room.service';
-import { RoomModel } from './room.model';
+// import { RoomModel } from './room.model';
 
 //create a room
 const createRoom = async (req: Request, res: Response) => {
