@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { SlotServices } from './slot.service';
+import { SlotQuery, SlotServices } from './slot.service';
 import { z } from 'zod';
 import { TSlot } from './slot.interface';
 
@@ -29,10 +29,10 @@ const createSlot = async (req: Request, res: Response, next: NextFunction) => {
     // Generate Slot Time Intervals
     // Generate start and end times for each slot.
     function generateTimeSlots(
-      room: any,
-      date: any,
-      start: any,
-      end: any,
+      room: string,
+      date: string,
+      start: string,
+      end: string,
       slotDuration: any,
       isBooked: boolean,
     ) {
@@ -118,6 +118,45 @@ const createSlot = async (req: Request, res: Response, next: NextFunction) => {
   // }
 };
 
+//get available slots
+const getAvailableSlots = async (req: Request, res: Response) => {
+  try {
+    // Extract query parameters
+    const query: SlotQuery = {
+      date: req.query.date as string,
+      roomId: req.query.roomId as string,
+    };
+    // let query = {};
+    // let query: { date?: string; roomId?: string } = {};
+    // if (req.query?.date && req.query?.roomId) {
+    //   const query = {
+    //     date: req.query.date as string,
+    //     roomId: req.query.roomId as string,
+    //   };
+    // }
+    // console.log(req.query?.date, req.query?.roomId);
+    // const { date, roomId } = req.query as { date?: string; roomId?: string };
+
+    // const date = req.query.date;
+    // const roomId = req.query.roomId;
+    const result = await SlotServices.getAvailableSlotsFromDB(query);
+    console.log(result);
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: 'Available slots retrieved successfully',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message: 'Failed to retrieve available  slots',
+      error: error.message,
+    });
+  }
+};
 export const SlotControllers = {
   createSlot,
+  getAvailableSlots,
 };
