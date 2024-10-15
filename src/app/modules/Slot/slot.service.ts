@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { TRoom } from '../Room/room.interface';
 import { TSlot } from './slot.interface';
 import { SlotModel } from './slot.model';
@@ -42,20 +43,77 @@ export type SlotQuery = {
 };
 //get available slots
 const getAvailableSlotsFromDB = async (query: SlotQuery = {}) => {
-  // Convert date to a Date object if needed
-  console.log('this is ', query);
+  console.log(query);
   if (query.date && query.roomId) {
-    const result = await SlotModel.find({
-      date: query.date,
-      room: query.roomId,
-    });
+    const result = await SlotModel.aggregate([
+      {
+        $match: {
+          date: query.date,
+          room: new Types.ObjectId(query.roomId),
+          isBooked: false,
+        },
+      },
+      {
+        $lookup: {
+          from: 'rooms',
+          localField: 'room',
+          foreignField: '_id',
+          as: 'roomDetails',
+        },
+      },
+      {
+        $unwind: '$roomDetails',
+      },
+      {
+        $match: {
+          'roomDetails.isDeleted': false,
+        }, // Filter out soft-deleted rooms
+      },
+      {
+        $project: {
+          _id: 1,
+          date: 1,
+          startTime: 1,
+          endTime: 1,
+          isBooked: 1,
+          'room._id': '$roomDetails._id',
+          'room.name': '$roomDetails.name',
+          'room.roomNo': '$roomDetails.roomNo',
+          'room.floorNo': '$roomDetails.floorNo',
+          'room.capacity': '$roomDetails.capacity',
+          'room.pricePerSlot': '$roomDetails.pricePerSlot',
+          'room.amenities': '$roomDetails.amenities',
+          'room.isDeleted': '$roomDetails.isDeleted',
+        },
+      },
+    ]);
     console.log(result);
     return result;
   } else {
-    const result = await SlotModel.find();
+    const result = await SlotModel.find({ isBooked: false });
+
     console.log(result);
     return result;
   }
+
+  //-----------------------------------------
+
+  // Convert date to a Date object if needed
+  // console.log('this is ', query);
+  // if (query.date && query.roomId) {
+  //   const result = await SlotModel.find({
+  //     date: query.date,
+  //     room: query.roomId,
+  //   });
+  //   console.log(result);
+  //   return result;
+  // } else {
+  //   const result = await SlotModel.find();
+  //   console.log(result);
+  //   return result;
+  // }
+
+  //------------------------------------------
   // const result = await SlotModel.find();
   // console.log(result);
   // return result;

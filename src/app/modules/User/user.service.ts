@@ -9,7 +9,7 @@ import config from '../../config';
 const signUpUser = async (payload: TSignUpUser) => {
   console.log(payload);
   const result = await User.create(payload);
-  return {};
+  return result;
 };
 
 const loginUser = async (payload: TLoginUser) => {
@@ -48,20 +48,23 @@ const loginUser = async (payload: TLoginUser) => {
       throw new AppError(StatusCodes.FORBIDDEN, 'Password does not matched');
     }
     //authentication with JWT
-    const jwtPayload = {
-      email: user,
-    };
 
+    const jwtPayload = {
+      email: user.email,
+      role: user.role,
+    };
+    //create token and send to the client
     const accessToken = jwt.sign(
       jwtPayload,
       config.jwt_access_secret as string,
       {
-        expiresIn: '10d',
+        expiresIn: '120d',
       },
     );
-
+    console.log(accessToken);
     return {
-      accessToken,
+      accessToken: accessToken,
+      user,
     };
   } catch (err) {
     console.log(err);

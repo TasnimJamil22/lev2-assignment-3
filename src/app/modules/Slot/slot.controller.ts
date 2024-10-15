@@ -119,7 +119,11 @@ const createSlot = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 //get available slots
-const getAvailableSlots = async (req: Request, res: Response) => {
+const getAvailableSlots = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     // Extract query parameters
     const query: SlotQuery = {
@@ -141,6 +145,7 @@ const getAvailableSlots = async (req: Request, res: Response) => {
     // const roomId = req.query.roomId;
     const result = await SlotServices.getAvailableSlotsFromDB(query);
     console.log(result);
+
     res.status(200).json({
       success: true,
       statusCode: 200,
@@ -148,12 +153,13 @@ const getAvailableSlots = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      statusCode: 500,
-      message: 'Failed to retrieve available  slots',
-      error: error.message,
-    });
+    // res.status(500).json({
+    //   success: false,
+    //   statusCode: 500,
+    //   message: 'Failed to retrieve available  slots',
+    //   error: error.message,
+    // });
+    next();
   }
 };
 export const SlotControllers = {

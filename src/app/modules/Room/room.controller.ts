@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { RoomServices } from './room.service';
 // import { RoomModel } from './room.model';
 
@@ -41,24 +41,35 @@ const getASingleRoomById = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      statusCode: 200,
+      statusCode: 500,
       message: 'Failed to retrieve a single room',
       error: error.message,
     });
   }
 };
 
-//get all rooms
-const getAllRooms = async (req: Request, res: Response) => {
-  const allRooms = req.body;
-  const result = await RoomServices.getAllRoomsFromDB();
-  //will send response to client side
-  res.status(200).json({
-    success: true,
-    statusCode: 200,
-    message: 'Rooms retrieved seccessfully',
-    data: result,
-  });
+//get all roomstry
+const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const allRooms = req.body;
+    console.log('test', req.user);
+    const result = await RoomServices.getAllRoomsFromDB();
+    //will send response to client side
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: 'Rooms retrieved seccessfully',
+      data: result,
+    });
+  } catch (err) {
+    // console.error(err);
+    // res.status(404).json({
+    //   success: false,
+    //   statusCode: 404,
+    //   message: err.message || 'Failed to retrieve all rooms',
+    // });
+    next();
+  }
 };
 
 //update a room by id
@@ -78,7 +89,7 @@ const updateRoom = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      statusCode: 200,
+      statusCode: 500,
       message: 'Failed to update a room',
       error: error.message,
     });
@@ -99,7 +110,7 @@ const deleteRoom = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      statusCode: 200,
+      statusCode: 500,
       message: 'Failed to delete a room',
       error: error.message,
     });

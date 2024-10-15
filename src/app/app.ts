@@ -17,6 +17,7 @@ app.use('/api/auth', UserRoutes);
 app.use('/api/rooms', RoomRoutes);
 app.use('/api/slots', SlotRoutes);
 
+//global error handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   const statusCode = 500;
   const message = err.message || 'Something went wrong';

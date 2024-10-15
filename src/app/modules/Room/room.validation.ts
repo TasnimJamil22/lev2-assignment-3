@@ -8,7 +8,8 @@ const createRoomValidationSchema = z.object({
     capacity: z.number({ required_error: 'capacity is required' }),
     pricePerSlot: z.number({ required_error: 'pricePerSlot is required' }),
     amenities: z.array(z.string({ required_error: 'amenities are required' })),
-    isDeleted: z.boolean({ required_error: 'isDeleted is required' }),
+    // isDeleted: z.boolean({ required_error: 'isDeleted is required' }),
+    isDeleted: z.boolean().default(false).optional(),
   }),
 });
 

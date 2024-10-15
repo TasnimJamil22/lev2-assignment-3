@@ -1,11 +1,104 @@
 import { NextFunction, Request, Response } from 'express';
-import { AnyZodObject } from 'zod';
+import AppError from '../errors/AppError';
+import { StatusCodes } from 'http-status-codes';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import config from '../config';
+import { TUserRole } from '../modules/User/user.interface';
 
-const auth = () => {
+// custom Request can be made
+// interface CustomRequest extends Request {
+//   user: JwtPayload;
+// }
+const auth = (...requiredRoles: TUserRole[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.headers.authorization);
-    next();
+    try {
+      console.log(req.headers.authorization);
+      const token = req.headers.authorization;
+      //   check if the token is sent from the client
+      if (!token) {
+        throw new AppError(StatusCodes.UNAUTHORIZED, 'Token is not given');
+      }
+      //check if the token is valid
+      jwt.verify(
+        token,
+        config.jwt_access_secret as string,
+        function (err, decoded) {
+          //err
+          if (err) {
+            throw new AppError(
+              StatusCodes.UNAUTHORIZED,
+              'Token is not correct',
+            );
+          }
+          console.log(decoded);
+          //   const { email, role } = decoded;
+          //check if the role is correct
+          const role = (decoded as JwtPayload).role;
+          if (!(requiredRoles && requiredRoles.includes(role))) {
+            throw new AppError(StatusCodes.UNAUTHORIZED, 'role is not correct');
+          }
+          req.user = decoded as JwtPayload;
+          return next();
+        },
+      );
+      //   return next();
+    } catch (err) {
+      next(err);
+    }
   };
 };
 
 export default auth;
+
+// import { NextFunction, Request, Response } from 'express';
+// import { AnyZodObject } from 'zod';
+// import AppError from '../errors/AppError';
+// import { StatusCodes } from 'http-status-codes';
+// import jwt, { JwtPayload } from 'jsonwebtoken';
+// import config from '../config';
+// import { TUserRole } from '../modules/User/user.interface';
+
+// //custom Request can be made
+// // interface CustomRequest extends Request {
+// //   user: JwtPayload;
+// // }
+
+// const auth = (...requiredRoles: TUserRole[]) => {
+//   return async (req: Request, res: Response, next: NextFunction) => {
+//     //checking if the token is sent from the client
+//     const token = req.headers.authorization;
+//     console.log(token);
+//     if (!token) {
+//       throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized');
+//     }
+//     //checking if the token is  invalid token
+//     jwt.verify(
+//       token,
+//       config.jwt_access_secret as string,
+//       function (err, decoded) {
+//         // err
+//         if (err) {
+//           throw new AppError(
+//             StatusCodes.UNAUTHORIZED,
+//             'You are not authorized!!!!',
+//           );
+//         }
+//         // decoded undefined
+//         // console.log(decoded);
+
+//         const role = (decoded as JwtPayload).role;
+//         //checking if the role is valid
+//         if (requiredRoles && !requiredRoles.includes(role)) {
+//           throw new AppError(
+//             StatusCodes.UNAUTHORIZED,
+//             'You are not authorized!!!!',
+//           );
+//         }
+//         req.user = decoded as JwtPayload;
+//         next();
+//       },
+//     );
+//   };
+// };
+
+// export default auth;
