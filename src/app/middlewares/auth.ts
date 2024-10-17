@@ -34,10 +34,23 @@ const auth = (...requiredRoles: TUserRole[]) => {
           //   const { email, role } = decoded;
           //check if the role is correct
           const role = (decoded as JwtPayload).role;
-          if (!(requiredRoles && requiredRoles.includes(role))) {
+
+          // if (!(requiredRoles && requiredRoles.includes(role))) {
+          if (!requiredRoles || !requiredRoles.includes(role)) {
+            // console.log('Role provided:', role);
+            // console.log('Type of role:', typeof role);
+            // console.log('Required roles:', requiredRoles);
+            // console.log(
+            //   'Type of requiredRoles:',
+            //   typeof requiredRoles,
+            //   Array.isArray(requiredRoles),
+            // );
             throw new AppError(StatusCodes.UNAUTHORIZED, 'role is not correct');
           }
           req.user = decoded as JwtPayload;
+          const email = (decoded as JwtPayload).email;
+          // console.log('Type of email:', typeof email);
+
           return next();
         },
       );
