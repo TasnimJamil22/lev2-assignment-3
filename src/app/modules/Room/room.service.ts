@@ -52,8 +52,13 @@ const updateRoomIntoDB = async (id: string, updatedRoom: roomUpdate) => {
 
 //soft delete
 //soft delete a room ( is not actually removed but isDelete: true , and then we use when app.get , we just search queries which are isDeleted:false, so it is remaining actually in the db, but shows deleted in the client side )
+//here, {new:true} becuase when we'r deleting id, it is showing isDeleted:true after refreshing,so now solved
 const deleteRoomSoftly = async (id: string) => {
-  const result = await Room.findByIdAndUpdate(id, { isDeleted: true });
+  const result = await Room.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true },
+  );
   return result;
 };
 

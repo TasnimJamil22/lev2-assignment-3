@@ -4,11 +4,13 @@ import validateRequest from '../../middlewares/validateRequest';
 import { SlotValidation } from './slot.validation';
 // import auth from '../../middlewares/auth';
 import { USER_ROLE } from '../User/user.constant';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
 router.post(
   '/create-slot',
+  auth(USER_ROLE.admin),
   validateRequest(SlotValidation.createSlotValidationSchema),
   SlotControllers.createSlot,
 );
