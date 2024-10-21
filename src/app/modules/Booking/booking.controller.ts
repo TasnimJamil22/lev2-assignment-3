@@ -5,8 +5,9 @@ import { BookingServices } from './booking.service';
 //create a booking
 const createABooking = async (req: Request, res: Response) => {
   try {
-    const { date, slots, room, user } = req.body;
+    const {   date, slots, room, user } = req.body;
     const result = await BookingServices.createABookingIntoDB({
+    
       date,
       slots,
       room,
@@ -62,8 +63,55 @@ const getSpecificUsersBookings = async (req: Request, res: Response) => {
     });
   }
 };
+//update a booking by id
+const updateBooking = async (req: Request, res: Response) => {
+  try {
+    const { bookingId } = req.params;
+    const updatedBooking = req.body;
+    console.log(updatedBooking);
+    const result = await BookingServices.updateBookingIntoDB(
+      bookingId,
+      updatedBooking,
+    );
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: 'Booking updated successfully',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message: 'failed to update a user bookings',
+      error: error.message,
+    });
+  }
+};
+//delete a booking by id (softly deleted)
+const deleteBooking = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await BookingServices.deleteABookingFromDB(id);
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: 'Booking deleted successfully',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message: 'failed to delete a user booking',
+      error: error.message,
+    });
+  }
+};
 export const BookingControllers = {
   createABooking,
   getAllBookings,
   getSpecificUsersBookings,
+  updateBooking,
+  deleteBooking,
 };

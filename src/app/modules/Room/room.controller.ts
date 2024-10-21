@@ -52,7 +52,7 @@ const getASingleRoomById = async (req: Request, res: Response) => {
 const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const allRooms = req.body;
-    console.log('test', req.user);
+    // console.log('test', req.user);
     const result = await RoomServices.getAllRoomsFromDB();
     //will send response to client side
     res.status(200).json({

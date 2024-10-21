@@ -13,7 +13,11 @@ const auth = (...requiredRoles: TUserRole[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       console.log(req.headers.authorization);
-      const token = req.headers.authorization;
+      const bearerToken = req.headers.authorization;
+      // console.log("Bearer Token:",bearerToken);
+      // const token = req.headers.authorization;
+      const token = bearerToken?.split(' ')[1];
+      // console.log('Token:', token);
       //   check if the token is sent from the client
       if (!token) {
         throw new AppError(StatusCodes.UNAUTHORIZED, 'Token is not given');

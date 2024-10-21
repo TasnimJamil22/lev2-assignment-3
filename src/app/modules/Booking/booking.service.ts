@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import AppError from '../../errors/AppError';
 import { Room } from '../Room/room.model';
 import { SlotModel } from '../Slot/slot.model';
@@ -32,7 +33,7 @@ const createABookingIntoDB = async (payload: TBooking) => {
 //get all bookings from db
 const getAllBookingsFromDB = async () => {
   try {
-    const result = await BookingModel.find()
+    const result = await BookingModel.find({ isDeleted: false })
       .populate('slots')
       .populate('room')
       .populate('user');
@@ -70,8 +71,50 @@ const getSpecificUsersBookingsfromDB = async (payload: any) => {
     console.log(err);
   }
 };
+//type of a update booking
+export type bookingUpdate = {
+  date?: string;
+  slots?: Types.ObjectId[];
+  room?: Types.ObjectId;
+  user?: Types.ObjectId;
+  isConfirmed?: 'confirmed' | 'unconfirmed';
+  isDeleted?: boolean;
+};
+//update a booking by id
+const updateBookingIntoDB = async (
+  id: string,
+  updatedBooking: bookingUpdate,
+) => {
+  const result = await BookingModel.findByIdAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        date: updatedBooking?.date,
+        slots: updatedBooking?.slots,
+        room: updatedBooking?.room,
+        user: updatedBooking?.user,
+        isConfirmed: updatedBooking?.isConfirmed,
+        isDeleted: updatedBooking?.isDeleted,
+      },
+    },
+    { new: true },
+  );
+  return result;
+};
+//delete a booking by id (softly delete)
+const deleteABookingFromDB = async (id: string) => {
+  const result = await BookingModel.findByIdAndUpdate(
+    { _id: id },
+    { isDeleted: true },
+    { new: true },
+  );
+  return result;
+};
+
 export const BookingServices = {
   createABookingIntoDB,
   getAllBookingsFromDB,
   getSpecificUsersBookingsfromDB,
+  updateBookingIntoDB,
+  deleteABookingFromDB,
 };
