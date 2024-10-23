@@ -1,5 +1,5 @@
 import app from './app';
-import config from './config';
+import config from './app/config';
 
 // const mongoose = require("mongoose");
 import mongoose from 'mongoose';
