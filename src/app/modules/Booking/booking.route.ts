@@ -7,26 +7,18 @@ import { BookingValidation } from './booking.validation';
 
 const router = express.Router();
 router.post(
-  '/create-booking',
+  '/',
   auth(USER_ROLE.user),
   validateRequest(BookingValidation.createBookingValidationSchema),
   BookingControllers.createABooking,
 );
-router.get(
-  '/getAllBookings',
-  auth(USER_ROLE.admin),
-  BookingControllers.getAllBookings,
-);
-router.get(
-  '/my-bookings',
-  auth(USER_ROLE.user),
-  BookingControllers.getSpecificUsersBookings,
-);
-router.put(
-  '/:bookingId',
-  auth(USER_ROLE.admin),
-  BookingControllers.updateBooking,
-);
+router.get('/', auth(USER_ROLE.admin), BookingControllers.getAllBookings);
+// router.get(
+//   '/',
+//   auth(USER_ROLE.user),
+//   BookingControllers.getSpecificUsersBookings,
+// );
+router.put('/:id', auth(USER_ROLE.admin), BookingControllers.updateBooking);
 router.delete('/:id', auth(USER_ROLE.admin), BookingControllers.deleteBooking);
 
 export const BookingRoutes = router;

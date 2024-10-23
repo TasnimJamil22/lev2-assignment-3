@@ -10,7 +10,9 @@ const createBookingValidationSchema = z.object({
     room: z.string().length(24, { message: 'Invalid Room ID' }).optional(), // Optional Room ID
     user: z.string().length(24, { message: 'Invalid User ID' }).optional(), // Optional User ID
     totalAmount: z.number().optional(),
-    isConfirmed: z.enum(['confirmed', 'unconfirmed']).default('unconfirmed'),
+    isConfirmed: z
+      .enum(['confirmed', 'unconfirmed', 'canceled'])
+      .default('unconfirmed'),
     isDeleted: z.boolean().default(false),
   }),
 });

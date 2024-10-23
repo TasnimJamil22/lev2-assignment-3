@@ -9,7 +9,7 @@ import auth from '../../middlewares/auth';
 const router = express.Router();
 
 router.post(
-  '/create-slot',
+  '/',
   auth(USER_ROLE.admin),
   validateRequest(SlotValidation.createSlotValidationSchema),
   SlotControllers.createSlot,

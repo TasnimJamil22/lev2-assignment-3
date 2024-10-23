@@ -9,7 +9,7 @@ const bookingSchema = new Schema<TBooking>({
   totalAmount: { type: Number },
   isConfirmed: {
     type: String,
-    enum: ['confirmed', 'unconfirmed'],
+    enum: ['confirmed', 'unconfirmed', 'canceled'],
     default: 'unconfirmed',
   },
   isDeleted: { type: Boolean, default: false },

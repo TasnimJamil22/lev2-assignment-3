@@ -35,8 +35,8 @@ const getASingleRoomById = async (
   next: NextFunction,
 ) => {
   try {
-    const { roomId } = req.params;
-    const result = await RoomServices.getASingleRoomFromDB(roomId);
+    const { id } = req.params;
+    const result = await RoomServices.getASingleRoomFromDB(id);
     // console.log(result);
     // console.log(roomId);
 
@@ -105,10 +105,10 @@ const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
 //update a room by id
 const updateRoom = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { roomId } = req.params;
+    const { id } = req.params;
     const updatedRoom = req.body;
 
-    const result = await RoomServices.updateRoomIntoDB(roomId, updatedRoom);
+    const result = await RoomServices.updateRoomIntoDB(id, updatedRoom);
     // console.log(result, roomId, updatedRoom);
     res.status(200).json({
       success: true,
@@ -130,8 +130,8 @@ const updateRoom = async (req: Request, res: Response, next: NextFunction) => {
 //delete a room softly
 const deleteRoom = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { roomId } = req.params;
-    const result = await RoomServices.deleteRoomSoftly(roomId);
+    const { id } = req.params;
+    const result = await RoomServices.deleteRoomSoftly(id);
     res.status(200).json({
       success: true,
       statusCode: 200,

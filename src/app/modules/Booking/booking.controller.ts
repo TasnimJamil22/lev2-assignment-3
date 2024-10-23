@@ -106,11 +106,11 @@ const updateBooking = async (
   next: NextFunction,
 ) => {
   try {
-    const { bookingId } = req.params;
+    const { id } = req.params;
     const updatedBooking = req.body;
     console.log(updatedBooking);
     const result = await BookingServices.updateBookingIntoDB(
-      bookingId,
+      id,
       updatedBooking,
     );
     res.status(200).json({
