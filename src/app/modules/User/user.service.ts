@@ -54,16 +54,12 @@ const loginUser = async (payload: TLoginUser) => {
       role: user.role,
     };
     //create token and send to the client
-    const accessToken = jwt.sign(
-      jwtPayload,
-      config.jwt_access_secret as string,
-      {
-        expiresIn: '120d',
-      },
-    );
-    console.log(accessToken);
+    const token = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+      expiresIn: '120d',
+    });
+    console.log(token);
     return {
-      accessToken: accessToken,
+      token: token,
       user,
     };
   } catch (err) {

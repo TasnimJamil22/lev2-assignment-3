@@ -19,14 +19,14 @@ const signUpUser = async (req: Request, res: Response) => {
 
 const loginUser = async (req: Request, res: Response) => {
   try {
-    const { user, accessToken } = await UserServices.loginUser(req.body);
+    const { user, token } = await UserServices.loginUser(req.body);
 
     //send response
     res.status(200).json({
       success: true,
       statusCode: 200,
       message: 'User logged in successfully',
-      data: { user, accessToken },
+      data: { user, token },
     });
   } catch (err: any) {
     console.error(err);
