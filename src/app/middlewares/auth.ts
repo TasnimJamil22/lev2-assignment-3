@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express';
 import AppError from '../errors/AppError';
 import { StatusCodes } from 'http-status-codes';
@@ -12,9 +13,9 @@ import { TUserRole } from '../modules/User/user.interface';
 const auth = (...requiredRoles: TUserRole[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(req.headers.authorization);
+      // console.log(req.headers.authorization);
       const bearerToken = req.headers.authorization;
-      // console.log("Bearer Token:",bearerToken);
+      // console.log('Bearer Token:', bearerToken);
       // const token = req.headers.authorization;
       const token = bearerToken?.split(' ')[1];
       // console.log('Token:', token);
@@ -52,21 +53,30 @@ const auth = (...requiredRoles: TUserRole[]) => {
             throw new AppError(StatusCodes.UNAUTHORIZED, 'role is not correct');
           }
           req.user = decoded as JwtPayload;
-          const email = (decoded as JwtPayload).email;
+          // const email = (decoded as JwtPayload).email;
           // console.log('Type of email:', typeof email);
 
           return next();
         },
       );
       //   return next();
-    } catch (err) {
-      next(err);
+    } catch (error: any) {
+      // catch (err) {
+      //   next(err);
+      // }
+      console.log(error);
+      res.status(401).json({
+        success: false,
+        statusCode: 401,
+        message: 'You have no access to this route',
+      });
     }
   };
 };
 
 export default auth;
 
+//1
 // import { NextFunction, Request, Response } from 'express';
 // import { AnyZodObject } from 'zod';
 // import AppError from '../errors/AppError';

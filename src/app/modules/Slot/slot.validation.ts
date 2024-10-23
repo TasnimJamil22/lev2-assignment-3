@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { Types } from 'mongoose';
 
 const createSlotValidationSchema = z.object({
   body: z
@@ -41,8 +40,6 @@ const createSlotValidationSchema = z.object({
     ),
 });
 
-
- 
 export const SlotValidation = {
   createSlotValidationSchema,
 };

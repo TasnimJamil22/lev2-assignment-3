@@ -31,13 +31,14 @@ export default [
       'no-unused-expressions': 'warn',
     },
   },
-  {
-    extends: [
-      'eslint:recommended',
-      'plugin:@typescript-eslint/recommended',
-      'prettier',
-    ],
-  },
+  
+  // {
+  //   extends: [
+  //     'eslint:recommended',
+  //     'plugin:@typescript-eslint/recommended',
+  //     'prettier',
+  //   ],
+  // },
 
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,

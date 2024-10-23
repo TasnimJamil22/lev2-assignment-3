@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import { model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import config from '../../config';

@@ -1,4 +1,4 @@
-import { model, Schema, Types } from 'mongoose';
+import { model, Schema} from 'mongoose';
 import { TSlot } from './slot.interface';
 
 const slotSchema = new Schema<TSlot>({

@@ -1,6 +1,5 @@
 import { Room } from './room.model';
 import { TRoom } from './room.interface';
-import { ObjectId } from 'mongodb';
 
 //create a room
 const createRoomIntoDB = async (payload: TRoom) => {

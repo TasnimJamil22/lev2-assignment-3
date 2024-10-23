@@ -1,6 +1,5 @@
 import { Types } from 'mongoose';
-import { TRoom } from '../Room/room.interface';
-import { TSlot } from './slot.interface';
+
 import { SlotModel } from './slot.model';
 
 interface Slot {

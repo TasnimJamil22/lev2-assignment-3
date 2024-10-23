@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Types } from 'mongoose';
-import AppError from '../../errors/AppError';
 import { Room } from '../Room/room.model';
 import { SlotModel } from '../Slot/slot.model';
 import { User } from '../User/user.model';

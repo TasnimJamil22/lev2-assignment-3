@@ -1,27 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express';
 import { SlotQuery, SlotServices } from './slot.service';
-import { z } from 'zod';
-import { TSlot } from './slot.interface';
 
 const createSlot = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let slotsClient = req.body;
-    let room = slotsClient.room;
-    let date = slotsClient.date;
-    let isBooked = slotsClient.isBooked;
+    const slotsClient = req.body;
+    const room = slotsClient.room;
+    const date = slotsClient.date;
+    const isBooked = slotsClient.isBooked;
     //slots
     const slotDuration = 60;
-    let start = slotsClient.startTime;
-    let end = slotsClient.endTime;
+    const start = slotsClient.startTime;
+    const end = slotsClient.endTime;
     //calculating start time in minutes since midnight
 
     // Split and parse start hours & minutes
-    let [startHours, startMinutes] = start.split(':').map(Number);
+    const [startHours, startMinutes] = start.split(':').map(Number);
     let startTimeInMinutes = startHours * 60 + startMinutes; // Calculate total minutes since midnight
     console.log(startHours, startMinutes);
     // Split and parse end hours & minutes
-    let [endHours, endMinutes] = end.split(':').map(Number);
-    let endTimeInMinutes = endHours * 60 + endMinutes; // Calculate total minutes since midnight
+    const [endHours, endMinutes] = end.split(':').map(Number);
+    const endTimeInMinutes = endHours * 60 + endMinutes; // Calculate total minutes since midnight
 
     //Calculate the total duration between the start and end times in minutes
     const totalDuration = endTimeInMinutes - startTimeInMinutes;
@@ -44,13 +44,13 @@ const createSlot = async (req: Request, res: Response, next: NextFunction) => {
       // while (startTimeInMinutes < endTimeInMinutes) {
       for (let i = 0; i < numberOfSlots; i++) {
         // Format start time
-        let startTime = formatTime(startTimeInMinutes);
+        const startTime = formatTime(startTimeInMinutes);
 
         // Add the interval to get the end time of this slot
-        let slotEndMinutes = startTimeInMinutes + slotDuration;
+        const slotEndMinutes = startTimeInMinutes + slotDuration;
 
         // Format end time
-        let endTime = formatTime(slotEndMinutes);
+        const endTime = formatTime(slotEndMinutes);
 
         // Push the slot to the array
         slots.push({ room, date, startTime, endTime, isBooked });
@@ -104,8 +104,8 @@ const createSlot = async (req: Request, res: Response, next: NextFunction) => {
       message: 'Slots created successfully',
       data: result,
     });
-  } catch (error: any) {
-    next();
+  } catch (err) {
+    next(err);
   }
   //the below code when we dont use 'global error handler', and we repeated these codes ..
   // catch (error: any) {
@@ -145,6 +145,15 @@ const getAvailableSlots = async (
     // const roomId = req.query.roomId;
     const result = await SlotServices.getAvailableSlotsFromDB(query);
     console.log(result);
+    // //if there is no matching data or empty database
+    // if (!result || result.length === 0) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     statusCode: 404,
+    //     message: 'No Data Found',
+    //     data: [],
+    //   });
+    // }
 
     res.status(200).json({
       success: true,
@@ -152,14 +161,14 @@ const getAvailableSlots = async (
       message: 'Available slots retrieved successfully',
       data: result,
     });
-  } catch (error: any) {
+  } catch (err) {
     // res.status(500).json({
     //   success: false,
     //   statusCode: 500,
     //   message: 'Failed to retrieve available  slots',
     //   error: error.message,
     // });
-    next();
+    next(err);
   }
 };
 export const SlotControllers = {
