@@ -66,7 +66,7 @@ To run the application locally, follow these steps:
 
    npm start
 
-2. The server will start on `http://localhost:3000` by default.
+2. The server will start on `http://localhost:5000` by default.
 
 ## API Endpoints
 
